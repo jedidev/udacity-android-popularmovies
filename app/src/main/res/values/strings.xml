@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="sort_by_popularity">Sort by popularity</string>
+    <string name="sort_by_rating">Sort by rating</string>
+
+    <string name="moviedb_base_url">https://api.themoviedb.org/3/</string>
+    <string name="moviedb_popular_movies_relative_url">movie/popular</string>
+    <string name="moviedb_top_rated_movies_relative_url">movie/top_rated</string>
+    <string name="moviedb_image_base_url">http://image.tmdb.org/t/p/w185</string>
+</resources>
