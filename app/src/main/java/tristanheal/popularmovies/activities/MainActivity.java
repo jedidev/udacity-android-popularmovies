@@ -16,6 +16,7 @@ import tristanheal.popularmovies.R;
 import tristanheal.popularmovies.adapters.ThumbnailsAdapter;
 import tristanheal.popularmovies.interfaces.IGetMoviesTaskCallback;
 import tristanheal.popularmovies.models.MovieModel;
+import tristanheal.popularmovies.services.MovieDbApi;
 import tristanheal.popularmovies.tasks.GetMoviesTask;
 
 public class MainActivity extends AppCompatActivity implements IGetMoviesTaskCallback {
@@ -24,19 +25,20 @@ public class MainActivity extends AppCompatActivity implements IGetMoviesTaskCal
 
     private GridView mThumbnailsGrid;
     private ThumbnailsAdapter mThumbnailsAdapter;
+    private MovieDbApi mMovieDbApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mMovieDbApi = MovieDbApi.getInstance();
         mThumbnailsGrid = (GridView)findViewById(R.id.thumbnails_grid);
         mThumbnailsAdapter = new ThumbnailsAdapter(this);
         mThumbnailsAdapter.SetMovies(new ArrayList<MovieModel>());
         mThumbnailsGrid.setAdapter(mThumbnailsAdapter);
 
-        GetMoviesTask task = new GetMoviesTask(this, this);
-        task.execute(getString(R.string.moviedb_popular_movies_relative_url));
+        mMovieDbApi.getMoviesByPopularity(this);
     }
 
     @Override
@@ -56,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements IGetMoviesTaskCal
 
             case R.id.popular:
 
-                task.execute(getString(R.string.moviedb_popular_movies_relative_url));
+                mMovieDbApi.getMoviesByPopularity(this);
                 break;
 
             case R.id.rating:
 
-                task.execute(getString(R.string.moviedb_top_rated_movies_relative_url));
+                mMovieDbApi.getMoviesByRating(this);
                 break;
 
         }
