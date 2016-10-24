@@ -21,6 +21,7 @@ import java.util.List;
 import tristanheal.popularmovies.R;
 import tristanheal.popularmovies.activities.DetailActivity;
 import tristanheal.popularmovies.activities.MainActivity;
+import tristanheal.popularmovies.interfaces.IMovieItemSelectCallback;
 import tristanheal.popularmovies.models.MovieModel;
 
 
@@ -31,11 +32,11 @@ import tristanheal.popularmovies.models.MovieModel;
 public class ThumbnailsAdapter extends BaseAdapter
 {
     private List<MovieModel> mMovies;
-    private Context mContext;
+    private IMovieItemSelectCallback mCallback;
 
-    public ThumbnailsAdapter(Context context) {
+    public ThumbnailsAdapter(IMovieItemSelectCallback callback) {
 
-        mContext = context;
+        mCallback = callback;
     }
 
     public void SetMovies(List<MovieModel> movies) {
@@ -70,7 +71,7 @@ public class ThumbnailsAdapter extends BaseAdapter
 
         if (view == null) {
 
-            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+            LayoutInflater inflater = ((Activity)mCallback).getLayoutInflater();
             view = inflater.inflate(R.layout.thumbnail_grid_item, parent, false);
             view.setTag(view.findViewById(R.id.thumbnail_imageview));
         }
@@ -78,18 +79,15 @@ public class ThumbnailsAdapter extends BaseAdapter
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent i = new Intent(mContext, DetailActivity.class);
-                i.putExtra(MainActivity.MOVIE_OBJECT, mMovies.get(position));
-                mContext.startActivity(i);
+            mCallback.movieItemSelected(mMovies.get(position));
             }
         });
 
         ImageView thumbnailImageView = (ImageView) view.getTag();
 
         MovieModel movie = mMovies.get(position);
-        String imageUrl = mContext.getString(R.string.moviedb_image_base_url) + movie.PosterPath;
-        Picasso.with(mContext).load(imageUrl).into(thumbnailImageView);
+        String imageUrl = ((Context)mCallback).getString(R.string.moviedb_image_base_url) + movie.PosterPath;
+        Picasso.with((Context)mCallback).load(imageUrl).into(thumbnailImageView);
 
         return view;
 

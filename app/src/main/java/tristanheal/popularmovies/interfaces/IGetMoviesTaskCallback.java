@@ -10,5 +10,5 @@ import tristanheal.popularmovies.models.MovieModel;
 
 public interface IGetMoviesTaskCallback {
 
-    void GetMoviesTaskComplete(List<MovieModel> movies);
+    void getMoviesTaskComplete(List<MovieModel> movies);
 }

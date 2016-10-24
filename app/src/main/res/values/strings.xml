@@ -2,9 +2,20 @@
     <string name="app_name">Popular Movies</string>
     <string name="sort_by_popularity">Sort by popularity</string>
     <string name="sort_by_rating">Sort by rating</string>
+    <string name="my_favorites">My favorites</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="delete_from_favorites">Delete favorite</string>
+    <string name="added_to_favorites_toast">Added to favorites</string>
+    <string name="deleted_from_favorites_toast">Deleted from favorites</string>
 
     <string name="moviedb_base_url">https://api.themoviedb.org/3/</string>
     <string name="moviedb_popular_movies_relative_url">movie/popular</string>
     <string name="moviedb_top_rated_movies_relative_url">movie/top_rated</string>
+    <string name="moviedb_trailers_relative_url">movie/%1$d/trailers</string>
+    <string name="moviedb_reviews_relative_url">movie/%1$d/reviews</string>
+    <string name="youtube_watch_relative_url">http://www.youtube.com/watch?v=%1$s</string>
     <string name="moviedb_image_base_url">http://image.tmdb.org/t/p/w185</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,12 +1,14 @@
 package tristanheal.popularmovies.activities;
 
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -14,65 +16,47 @@ import java.util.List;
 
 import tristanheal.popularmovies.R;
 import tristanheal.popularmovies.adapters.ThumbnailsAdapter;
+import tristanheal.popularmovies.enums.MovieSortMode;
+import tristanheal.popularmovies.fragments.DetailsFragment;
 import tristanheal.popularmovies.interfaces.IGetMoviesTaskCallback;
+import tristanheal.popularmovies.interfaces.IMovieItemSelectCallback;
 import tristanheal.popularmovies.models.MovieModel;
+import tristanheal.popularmovies.services.Favorites;
 import tristanheal.popularmovies.services.MovieDbApi;
-import tristanheal.popularmovies.tasks.GetMoviesTask;
 
-public class MainActivity extends AppCompatActivity implements IGetMoviesTaskCallback {
+public class MainActivity extends AppCompatActivity implements IMovieItemSelectCallback {
 
     public final static String MOVIE_OBJECT = "tristanheal.popularmovies.MOVIE_OBJECT";
-
-    private GridView mThumbnailsGrid;
-    private ThumbnailsAdapter mThumbnailsAdapter;
-    private MovieDbApi mMovieDbApi;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMovieDbApi = MovieDbApi.getInstance();
-        mThumbnailsGrid = (GridView)findViewById(R.id.thumbnails_grid);
-        mThumbnailsAdapter = new ThumbnailsAdapter(this);
-        mThumbnailsAdapter.SetMovies(new ArrayList<MovieModel>());
-        mThumbnailsGrid.setAdapter(mThumbnailsAdapter);
-
-        mMovieDbApi.getMoviesByPopularity(this);
+        mTwoPane = findViewById(R.id.detail_container) != null;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void movieItemSelected(MovieModel movie) {
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.sort_menu, menu);
-        return true;
-    }
+        if (!mTwoPane) {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+            Intent i = new Intent(this, DetailActivity.class);
+            i.putExtra(MainActivity.MOVIE_OBJECT, movie);
+            startActivity(i);
 
-        GetMoviesTask task = new GetMoviesTask(this, this);
+        } else {
 
-        switch (item.getItemId()) {
+            Bundle args = new Bundle();
+            args.putParcelable("movie", movie);
 
-            case R.id.popular:
-
-                mMovieDbApi.getMoviesByPopularity(this);
-                break;
-
-            case R.id.rating:
-
-                mMovieDbApi.getMoviesByRating(this);
-                break;
-
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            Fragment fragment = new DetailsFragment();
+            fragment.setArguments(args);
+            ft.replace(R.id.detail_container, fragment);
+            ft.commit();
         }
-        return true;
-    }
-
-    @Override
-    public void GetMoviesTaskComplete(List<MovieModel> movies) {
-
-        mThumbnailsAdapter.SetMovies(movies);
     }
 }
